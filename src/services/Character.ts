@@ -42,3 +42,28 @@ export const getCharactersById = async (
     return response.data;
   });
 };
+
+export const getCharactersByMultipleIds = async (ids: string[]): Promise<CharacterProps[]> => {
+  return API.get(`character/${ids}`)
+    .then(response => {
+      return response.data;
+    })
+}
+
+export const searchCharactersByName = async (name: string): Promise<CharacterProps[]> => {
+  const params = {
+    name: name
+  }
+
+  if (name.length === 0) return [];
+
+  return API.get(`character`, { params: params })
+    .then(response => {
+      console.log(response.data)
+      return response.data.results.slice(0, 5);
+    })
+    .catch(() => {
+
+      return [];
+    })
+}

@@ -1,5 +1,9 @@
 import React, { useEffect, useRef, useState } from "react";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { SharedElement } from "react-navigation-shared-element";
+import { Animated, FlatList, Text, View } from "react-native";
+import { StackScreenProps } from "@react-navigation/stack";
+
 import {
   MainContainer,
   ImageContainer,
@@ -8,11 +12,10 @@ import {
   RowText,
   TitleDesc,
   Description,
+  EpisodItem,
+  EpisodeName,
+  EpisodAirDate
 } from "./styles";
-import { SharedElement } from "react-navigation-shared-element";
-import { Animated, FlatList, Text, View } from "react-native";
-import { StackScreenProps } from "@react-navigation/stack";
-
 import Status from "../../components/Status";
 import { CharacterProps, getCharactersById } from "../../services/Character";
 import { getEpisodesByMultipleId, EpisodeProps } from "../../services/Episodes";
@@ -30,7 +33,6 @@ const CharacterDetail = ({ route, navigation }: Props) => {
       getCharactersById(route.params.characterId).then((characterResponse) => {
         setCharacter(characterResponse);
 
-        console.log("translateX", translateX);
         Animated.timing(translateX, {
           toValue: 0,
           duration: 300,
@@ -41,16 +43,17 @@ const CharacterDetail = ({ route, navigation }: Props) => {
           return episode.replace(/[^0-9]+/g, "");
         });
         getEpisodesByMultipleId(episodesId).then((episodesResponse) => {
-          if(!Array.isArray(episodesResponse)){
+          if (!Array.isArray(episodesResponse)) {
             episodesResponse = [episodesResponse]
           }
           setEpisodes(episodesResponse);
         });
       });
 
-    if (!character) {
-      fetchCharacter();
-    }
+    console.log("dentro useEFFFEEEEC");
+
+    fetchCharacter();
+
   }, []);
 
   const ADetailContainer = Animated.createAnimatedComponent(DetailContainer);
@@ -63,6 +66,7 @@ const CharacterDetail = ({ route, navigation }: Props) => {
           id={`image-${route.params.characterId}`}
         >
           <CharacterImage source={{ uri: route.params.imageUrl }} />
+
         </SharedElement>
       </ImageContainer>
 
@@ -106,33 +110,49 @@ const CharacterDetail = ({ route, navigation }: Props) => {
             <TitleDesc>Last Seen:</TitleDesc>
             <Description>{character.location.name}</Description>
           </RowText>
-          <RowText style={{justifyContent:'center', marginTop:10}}>
+          <RowText style={{ justifyContent: 'center', marginTop: 10 }}>
             <TitleDesc>Episodes</TitleDesc>
-            
+
           </RowText>
 
           <FlatList
-        data={episodes}
-        keyExtractor={(item)=> item.id.toString()}
-        
-        renderItem={({item})=>{
-          return <View style={{flex:1, height:40, marginBottom:10}}>
-            <Text style={{fontSize:18, fontWeight:'bold'}}>{item.name}</Text> 
-            
-            <Text>{item.air_date}</Text> 
-          </View>
-        }}
-      />
+            data={episodes}
+            keyExtractor={(item) => item.id.toString()}
+
+            renderItem={({ item }) => {
+              return (
+                //TODO: data destructure route params
+                <EpisodItem onPress={() => {
+                  navigation.push('Episode', {
+                    episodeId: item.id,
+                    episodeName: item.name,
+                    episodeAidDate: item.air_date,
+                    characterId: route.params.characterId,
+                    characterImage: route.params.imageUrl
+                  })
+                }}>
+                  <EpisodeName >{item.name}</EpisodeName>
+                  <EpisodAirDate>{item.air_date}</EpisodAirDate>
+
+                </EpisodItem>
+
+              )
+            }}
+          />
         </ADetailContainer>
       ) : null}
 
-    
+
     </MainContainer>
   );
 };
 
 CharacterDetail.sharedElements = (navigation: any) => {
   const item = navigation.params.characterId;
+  console.log("Shared detail");
+  console.log(item);
+
+
   return [`image-${item}`];
 };
 

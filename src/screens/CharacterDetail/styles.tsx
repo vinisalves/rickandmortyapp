@@ -7,10 +7,8 @@ export const MainContainer = styled.View`
 export const ImageContainer = styled.View`
     height: 290px;
      resizeMode: contain;
-
-
 `
-export const CharacterImage = styled.Image `
+export const CharacterImage = styled.Image`
     flex:1;
     resizeMode: stretch;
 `
@@ -20,7 +18,7 @@ type DetailContainerProps = {
 export const DetailContainer = styled.View<DetailContainerProps>`
     flex:1;
     padding: 20px;
-    transform: translateX(${props=> props.translateX + "px"});
+    transform: translateX(${props => props.translateX + "px"});
 `
 export const RowText = styled.View`
     flex-direction: row;
@@ -32,15 +30,24 @@ export const TitleDesc = styled.Text`
     font-weight: 700;
     opacity: 0.7;
     width: 100px;
-
-    
-
 `
 
-export const Description =  styled.Text`
+export const Description = styled.Text`
     font-size: 18px;
     font-weight:300;
     margin-right: 10px;
-    
+`
+
+export const EpisodItem = styled.TouchableOpacity`
+    height: 40px;
+    margin-bottom: 10px;
+`
+
+export const EpisodeName = styled.Text`
+    font-size: 18px;
+    font-weight: bold;
+`
+
+export const EpisodAirDate = styled.Text`
 
 `

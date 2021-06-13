@@ -4,22 +4,25 @@ export type EpisodeProps = {
     id: number;
     air_date: string;
     episode: string;
-    characaters: string[];
+    characters: string[];
     url: string;
     name: string;
     created: string;
 
 }
 
-
-
 export const getEpisodesByMultipleId = async (ids: string[]): Promise<EpisodeProps[]> => {
-    console.log(ids);
-   return API.get(`episode/${ids}`)
-    .then(response => {
-        console.log(response.data)
-        return response.data;
 
-    })
+    return API.get(`episode/${ids}`)
+        .then(response => {
+            return response.data;
 
+        })
+}
+
+export const getEpisodeById = async (id: number): Promise<EpisodeProps> => {
+    return API.get(`episode/${id}`)
+        .then(response => {
+            return response.data;
+        })
 }

@@ -1,27 +1,22 @@
 import React, { useEffect, useRef, useState } from "react";
 import {
-  Text,
   Animated,
-  Image,
   Dimensions,
   View,
   StyleSheet,
+  TextInput
 } from "react-native";
+import { StackScreenProps } from "@react-navigation/stack";
 import { FontAwesome } from "@expo/vector-icons";
 import { MaterialIcons } from "@expo/vector-icons";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 
 import AppLoading from "expo-app-loading";
 
-import {
-  NavigationParams,
-  NavigationScreenProp,
-  NavigationState,
-} from "react-navigation";
 
-import {SharedElement} from "react-navigation-shared-element";
+import { SharedElement } from "react-navigation-shared-element";
 
- import Status from "../../components/Status";
+import Status from "../../components/Status";
 import {
   MainContainer,
   CardImage,
@@ -30,27 +25,42 @@ import {
   Header,
   ItemContainer,
   InputContainer,
+  InputSearchCharacter,
+  SearchContainer,
   TitleTextItem,
   DescTextItem,
   RowContainer,
   Footer,
   InfoContainer,
+  SearchItem,
+  SearchCharacterName,
 } from "./style";
-import { getCharacters, CharacterProps } from "../../services/Character";
+import { getCharacters, CharacterProps, searchCharactersByName } from "../../services/Character";
+import { FlatList } from "react-native";
+import CharacterAvatar from "../../components/CharacterAvatar";
 
 
-type NavigationType = {
-  navigation: NavigationScreenProp<NavigationState, NavigationParams>;
-};
+
+type Props = StackScreenProps<RootStackParamList, "Home">;
 
 
-const Home = ({ navigation }: NavigationType) => {
+
+const Home = ({ navigation }: Props) => {
   const [data, setData] = useState<CharacterProps[]>([]);
+  const [searchCharacters, setSearchCharacters] = useState<CharacterProps[]>([]);
   const scrollX = useRef(new Animated.Value(0)).current;
 
   const { height, width } = Dimensions.get("screen");
 
-  
+  function searchByName(name: string) {
+    console.log(name);
+
+    searchCharactersByName(name).then(response => {
+      setSearchCharacters(response);
+    })
+
+  }
+
 
   useEffect(() => {
     const fetchData = async () => {
@@ -60,7 +70,7 @@ const Home = ({ navigation }: NavigationType) => {
     };
     if (data.length === 0) {
       fetchData();
-      
+
     }
   }, []);
 
@@ -71,6 +81,7 @@ const Home = ({ navigation }: NavigationType) => {
       </View>
     );
   }
+
 
   const arrayBGs = [
     "#222f3e",
@@ -99,40 +110,40 @@ const Home = ({ navigation }: NavigationType) => {
   };
 
   const Indicator = ({ scrollX }: { scrollX: Animated.Value }) => {
-    
+
     return (
-     
+
       <View
-      style={{
-        flexDirection:'row',
-        position: 'absolute',
-        top: 150,
-        justifyContent: "center",
-        alignItems: 'center',
-        alignSelf:'center'
-      }}
+        style={{
+          flexDirection: 'row',
+          position: 'absolute',
+          top: 150,
+          justifyContent: "center",
+          alignItems: 'center',
+          alignSelf: 'center'
+        }}
       >
 
         {
-          data.map((_, i)=>{
+          data.map((_, i) => {
             const scale = scrollX.interpolate({
               inputRange: [(i - 1) * width, i * width, (i + 1) * width],
               outputRange: [0.8, 1.9, 0.8],
               extrapolate: "clamp",
             });
-    
+
             const borderRadius = scrollX.interpolate({
               inputRange: [(i - 1) * width, i * width, (i + 1) * width],
               outputRange: [10, 4, 10],
               extrapolate: "clamp",
             });
-    
+
             const widthAnim = scrollX.interpolate({
               inputRange: [(i - 1) * width, i * width, (i + 1) * width],
               outputRange: [10, 20, 10],
               extrapolate: "clamp",
             });
-    
+
             const heightAnim = scrollX.interpolate({
               inputRange: [(i - 1) * width, i * width, (i + 1) * width],
               outputRange: [10, 3, 10],
@@ -140,21 +151,21 @@ const Home = ({ navigation }: NavigationType) => {
             });
 
             return <Animated.View
-            key={`indicator-${i}`}
-            style={{
-              margin: 10,
-              width: widthAnim,
-              height: heightAnim,
+              key={`indicator-${i}`}
+              style={{
+                margin: 10,
+                width: widthAnim,
+                height: heightAnim,
 
-              borderRadius,
-              backgroundColor: "#fff",
-              transform: [
-                {
-                  scale,
-                },
-              ],
-            }}
-          />
+                borderRadius,
+                backgroundColor: "#fff",
+                transform: [
+                  {
+                    scale,
+                  },
+                ],
+              }}
+            />
           })
         }
       </View>
@@ -177,28 +188,26 @@ const Home = ({ navigation }: NavigationType) => {
     const AInfoContainer = Animated.createAnimatedComponent(InfoContainer);
     return (
       <ItemContainer>
-        <CardContainer onPress={()=> navigation.navigate('Detail',
-        {
-          characterId: item.id,
-          imageUrl: item.image
-        })}>
+        <CardContainer onPress={() => navigation.push('Detail',
+          {
+            characterId: item.id,
+            imageUrl: item.image
+          })}>
           <SharedElement id={`image-${item.id}`}
-          style={{
-            flex:1,
-            alignSelf: "center",
-            justifyContent: "center"
-           
-            
-          }}>
-          <CardImage
-            source={{ uri: item.image }}
-            key={item.id.toString() + ""}
-          />
+            style={{
+              flex: 1,
+              alignSelf: "center",
+              justifyContent: "center"
+            }}>
+            <CardImage
+              source={{ uri: item.image }}
+              key={item.id.toString() + ""}
+            />
           </SharedElement>
-         
-          
+
+
         </CardContainer>
-        <TitleName  numberOfLines={1}>
+        <TitleName numberOfLines={1}>
           {item.name}
         </TitleName>
         <Animated.View
@@ -249,7 +258,33 @@ const Home = ({ navigation }: NavigationType) => {
       <Header>
         <MaterialIcons name="menu" size={35} color="black" />
         <InputContainer>
+          <InputSearchCharacter placeholder="Search" onChangeText={(text) => searchByName(text)} />
           <FontAwesome name="search" size={24} color="black" />
+          <SearchContainer>
+
+
+
+            <FlatList
+              data={searchCharacters}
+              style={{ flex: 1, zIndex: 99, borderRadius: 1000 }}
+              renderItem={({ item }) => {
+                return (
+                  <SearchItem onPress={() => console.log('clicou')}>
+                    <CharacterAvatar source={{ uri: item.image }}></CharacterAvatar>
+                    <SearchCharacterName>
+                      {item.name}
+                    </SearchCharacterName>
+
+
+                  </SearchItem>
+
+                )
+              }}
+
+            />
+
+
+          </SearchContainer>
         </InputContainer>
       </Header>
       <Animated.FlatList
