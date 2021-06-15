@@ -12,5 +12,7 @@ type RootStackParamList = {
     characterId?: number,
     characterImage?: string,
   };
+  AllCharacters: undefined,
+  AllEpisodes: undefined
 
 };

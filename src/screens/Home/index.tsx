@@ -34,10 +34,13 @@ import {
   InfoContainer,
   SearchItem,
   SearchCharacterName,
+  CharacterAvatar,
+  SearchSeparator
 } from "./style";
 import { getCharacters, CharacterProps, searchCharactersByName } from "../../services/Character";
 import { FlatList } from "react-native";
-import CharacterAvatar from "../../components/CharacterAvatar";
+import { TouchableOpacity } from "react-native-gesture-handler";
+
 
 
 
@@ -53,8 +56,6 @@ const Home = ({ navigation }: Props) => {
   const { height, width } = Dimensions.get("screen");
 
   function searchByName(name: string) {
-    console.log(name);
-
     searchCharactersByName(name).then(response => {
       setSearchCharacters(response);
     })
@@ -257,35 +258,14 @@ const Home = ({ navigation }: Props) => {
       <BackGround scrollX={scrollX} />
       <Header>
         <MaterialIcons name="menu" size={35} color="black" />
-        <InputContainer>
-          <InputSearchCharacter placeholder="Search" onChangeText={(text) => searchByName(text)} />
+        <TitleName numberOfLines={1}>Rick and Morty App</TitleName>
+        <TouchableOpacity
+          onPress={() => navigation.navigate("AllCharacters")}
+        >
+
           <FontAwesome name="search" size={24} color="black" />
-          <SearchContainer>
+        </TouchableOpacity>
 
-
-
-            <FlatList
-              data={searchCharacters}
-              style={{ flex: 1, zIndex: 99, borderRadius: 1000 }}
-              renderItem={({ item }) => {
-                return (
-                  <SearchItem onPress={() => console.log('clicou')}>
-                    <CharacterAvatar source={{ uri: item.image }}></CharacterAvatar>
-                    <SearchCharacterName>
-                      {item.name}
-                    </SearchCharacterName>
-
-
-                  </SearchItem>
-
-                )
-              }}
-
-            />
-
-
-          </SearchContainer>
-        </InputContainer>
       </Header>
       <Animated.FlatList
         data={data}

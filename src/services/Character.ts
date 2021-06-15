@@ -1,5 +1,15 @@
 import API from "../plugins/axios";
 
+export type CharacterServiceProps = {
+  info: {
+    count: number,
+    pages: number,
+    next: string | null,
+    prev: string | null
+  },
+  results: CharacterProps[]
+}
+
 export type CharacterProps = {
   id: number;
   name: string;
@@ -59,11 +69,13 @@ export const searchCharactersByName = async (name: string): Promise<CharacterPro
 
   return API.get(`character`, { params: params })
     .then(response => {
-      console.log(response.data)
       return response.data.results.slice(0, 5);
     })
     .catch(() => {
-
       return [];
     })
+}
+
+export const getCharacterByPagination = (url = "character"): Promise<CharacterServiceProps> => {
+  return API.get(url).then(response => response.data);
 }

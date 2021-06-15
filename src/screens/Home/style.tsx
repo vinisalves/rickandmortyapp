@@ -1,5 +1,5 @@
 import styled from "styled-components/native";
-import { Dimensions, PixelRatio } from "react-native";
+import { Dimensions } from "react-native";
 
 const { height, width } = Dimensions.get("screen");
 
@@ -16,6 +16,8 @@ export const Header = styled.View`
   background-color: #f8f8f8;
   border-bottom-left-radius: 50px;
   elevation: 23;
+  z-index: 23;
+
   justify-content: space-between;
   align-items: center;
   flex-direction: row;
@@ -42,31 +44,43 @@ export const InputSearchCharacter = styled.TextInput`
    
 `
 export const SearchContainer = styled.View`
+  flex:1;
   position: absolute;
-  top: 30px;
+  top: 90px;
+  left: 90px;
   margin-top: 10px;
-  z-index: 32;
-  elevation: 32;
   flex-direction: column;
   border-bottom-right-radius: 20px;
   border-top-left-radius: 20px;
   overflow: hidden;
+    
   
 `
 export const SearchItem = styled.TouchableOpacity`
   flex:1;
   flex-direction: row;
   align-items: center;
-  height: 100px;
+  height: 80px;
   width: ${width - 100}px;
-  background-color: #f8f8f8;
-  padding: 10px;
+  background-color: red;
+  z-index: 24;
+  
   
 `
+export const SearchSeparator = styled.View`
+  flex:1;
+  height: 1px;
+  background-color: rgba(0,0,0,.6);
+`
+export const CharacterAvatar = styled.Image`
+  width: 40px;
+  height: 40px;
+  border-radius: 40px;
+`
+
 export const SearchCharacterName = styled.Text`
  color: black;
- font-size: 20px;
- font-weight: 700;
+ font-size: 18px;
  margin-left: 10px;
 `
 export const ItemContainer = styled.View`
@@ -103,6 +117,7 @@ export const CardContainer = styled.TouchableOpacity`
   margin-top: 20px;
   margin-bottom: 10px;
   elevation: 20;
+  z-index : 20;
 `;
 
 export const CardImage = styled.Image`
@@ -162,3 +177,4 @@ export const Footer = styled.View`
   elevation: 10;
   z-index: 10;
 `
+

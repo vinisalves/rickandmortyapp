@@ -105,8 +105,6 @@ const Episode = ({ route, navigation }: Props) => {
 
 Episode.sharedElements = (navigation: any) => {
     const item = navigation.params.characterId;
-    console.log('dentro shared');
-    console.log(item);
     return [`image-${item}`];
 };
 

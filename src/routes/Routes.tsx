@@ -7,6 +7,7 @@ import { enableScreens } from "react-native-screens"
 import Home from "../screens/Home";
 import CharacterDetail from "../screens/CharacterDetail";
 import Episode from "../screens/Episode";
+import AllCharacters from "../screens/AllCharacters";
 
 import { createSharedElementStackNavigator } from 'react-navigation-shared-element';
 import { Easing } from "react-native-reanimated";
@@ -84,7 +85,10 @@ export default function Routes() {
         }
       />
 
-
+      <Stack.Screen
+        name="AllCharacters"
+        component={AllCharacters}
+      />
     </Stack.Navigator>
   );
 }
