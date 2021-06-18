@@ -1,5 +1,16 @@
 import API from "../plugins/axios";
 
+export type CharacterServiceProps = {
+    info: {
+        count: number,
+        pages: number,
+        next: string | null,
+        prev: string | null
+    },
+    results: EpisodeProps[]
+}
+
+
 export type EpisodeProps = {
     id: number;
     air_date: string;
@@ -25,4 +36,9 @@ export const getEpisodeById = async (id: number): Promise<EpisodeProps> => {
         .then(response => {
             return response.data;
         })
+}
+
+
+export const getEpisodesByPagination = (url = "episode"): Promise<CharacterServiceProps> => {
+    return API.get(url).then(response => response.data);
 }

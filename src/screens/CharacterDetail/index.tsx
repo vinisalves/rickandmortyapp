@@ -16,10 +16,10 @@ import {
   EpisodeName,
   EpisodAirDate
 } from "./styles";
+import ArrowBack from "../../components/ArrowBack";
 import Status from "../../components/Status";
 import { CharacterProps, getCharactersById } from "../../services/Character";
 import { getEpisodesByMultipleId, EpisodeProps } from "../../services/Episodes";
-import ArrowBack from "../../components/ArraowBack";
 type Props = StackScreenProps<RootStackParamList, "Detail">;
 
 const CharacterDetail = ({ route, navigation }: Props) => {
@@ -50,8 +50,6 @@ const CharacterDetail = ({ route, navigation }: Props) => {
         });
       });
 
-    console.log("dentro useEFFFEEEEC");
-
     fetchCharacter();
 
   }, []);
@@ -63,7 +61,7 @@ const CharacterDetail = ({ route, navigation }: Props) => {
 
       <ImageContainer>
         <View style={{ position: 'absolute', left: 10, top: 20, flex: 1, width: 30, height: 30, borderRadius: 30, zIndex: 2 }}>
-          <ArrowBack />
+          <ArrowBack navigation={navigation} />
         </View>
         <SharedElement
           style={[{ flex: 1 }]}
@@ -153,10 +151,6 @@ const CharacterDetail = ({ route, navigation }: Props) => {
 
 CharacterDetail.sharedElements = (navigation: any) => {
   const item = navigation.params.characterId;
-  console.log("Shared detail");
-  console.log(item);
-
-
   return [`image-${item}`];
 };
 

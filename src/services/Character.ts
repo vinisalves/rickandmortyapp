@@ -76,6 +76,6 @@ export const searchCharactersByName = async (name: string): Promise<CharacterPro
     })
 }
 
-export const getCharacterByPagination = (url = "character"): Promise<CharacterServiceProps> => {
+export const getCharacterByPagination = (url = "character"): Promise<CharacterServiceProps[]> => {
   return API.get(url).then(response => response.data);
 }

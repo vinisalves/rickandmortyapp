@@ -1,10 +1,15 @@
 import React from "react";
 import { AntDesign } from '@expo/vector-icons';
 import { TouchableOpacity } from "react-native";
-const ArrowBack = (props: any) => {
+import { NavigationScreenProp } from 'react-navigation';
+
+
+
+const ArrowBack = (navigation: any) => {
 
     return (
         <TouchableOpacity
+            onPress={() => navigation.goBack()}
             style={{ elevation: 20 }}
         >
             <AntDesign name="arrowleft" size={35} color="white" />

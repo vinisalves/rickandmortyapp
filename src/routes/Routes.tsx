@@ -1,5 +1,4 @@
 import React from "react";
-import { CardStyleInterpolators, createStackNavigator } from "@react-navigation/stack";
 
 import { enableScreens } from "react-native-screens"
 
@@ -88,6 +87,11 @@ export default function Routes() {
       <Stack.Screen
         name="AllCharacters"
         component={AllCharacters}
+        options={() => ({
+          mode: "card",
+          headerShown: false,
+
+        })}
       />
     </Stack.Navigator>
   );

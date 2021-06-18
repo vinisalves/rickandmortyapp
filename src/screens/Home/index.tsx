@@ -4,17 +4,14 @@ import {
   Dimensions,
   View,
   StyleSheet,
-  TextInput
 } from "react-native";
 import { StackScreenProps } from "@react-navigation/stack";
 import { FontAwesome } from "@expo/vector-icons";
 import { MaterialIcons } from "@expo/vector-icons";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-
 import AppLoading from "expo-app-loading";
-
-
 import { SharedElement } from "react-navigation-shared-element";
+import { TouchableOpacity } from "react-native-gesture-handler";
 
 import Status from "../../components/Status";
 import {
@@ -24,44 +21,21 @@ import {
   TitleName,
   Header,
   ItemContainer,
-  InputContainer,
-  InputSearchCharacter,
-  SearchContainer,
   TitleTextItem,
   DescTextItem,
   RowContainer,
   Footer,
   InfoContainer,
-  SearchItem,
-  SearchCharacterName,
-  CharacterAvatar,
-  SearchSeparator
 } from "./style";
 import { getCharacters, CharacterProps, searchCharactersByName } from "../../services/Character";
-import { FlatList } from "react-native";
-import { TouchableOpacity } from "react-native-gesture-handler";
-
-
-
 
 type Props = StackScreenProps<RootStackParamList, "Home">;
 
-
-
 const Home = ({ navigation }: Props) => {
   const [data, setData] = useState<CharacterProps[]>([]);
-  const [searchCharacters, setSearchCharacters] = useState<CharacterProps[]>([]);
   const scrollX = useRef(new Animated.Value(0)).current;
 
   const { height, width } = Dimensions.get("screen");
-
-  function searchByName(name: string) {
-    searchCharactersByName(name).then(response => {
-      setSearchCharacters(response);
-    })
-
-  }
-
 
   useEffect(() => {
     const fetchData = async () => {
@@ -82,7 +56,6 @@ const Home = ({ navigation }: Props) => {
       </View>
     );
   }
-
 
   const arrayBGs = [
     "#222f3e",
@@ -113,7 +86,6 @@ const Home = ({ navigation }: Props) => {
   const Indicator = ({ scrollX }: { scrollX: Animated.Value }) => {
 
     return (
-
       <View
         style={{
           flexDirection: 'row',
@@ -124,7 +96,6 @@ const Home = ({ navigation }: Props) => {
           alignSelf: 'center'
         }}
       >
-
         {
           data.map((_, i) => {
             const scale = scrollX.interpolate({
@@ -170,16 +141,14 @@ const Home = ({ navigation }: Props) => {
           })
         }
       </View>
-
     )
   }
-  const renderItem = ({
-    item,
-    index,
-  }: {
+
+  type RenderItemProps = {
     item: CharacterProps;
-    index: number;
-  }) => {
+    index: number
+  }
+  const renderItem = ({ item, index }: RenderItemProps) => {
     const translateY = scrollX.interpolate({
       inputRange: [(index - 1) * width, index * width, (index + 1) * width],
       outputRange: [height + 150, 0, 0],
@@ -262,10 +231,8 @@ const Home = ({ navigation }: Props) => {
         <TouchableOpacity
           onPress={() => navigation.navigate("AllCharacters")}
         >
-
           <FontAwesome name="search" size={24} color="black" />
         </TouchableOpacity>
-
       </Header>
       <Animated.FlatList
         data={data}
@@ -289,7 +256,5 @@ const Home = ({ navigation }: Props) => {
     </MainContainer>
   );
 }
-
-
 
 export default Home;
