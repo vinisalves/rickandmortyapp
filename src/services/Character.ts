@@ -69,13 +69,13 @@ export const searchCharactersByName = async (name: string): Promise<CharacterPro
 
   return API.get(`character`, { params: params })
     .then(response => {
-      return response.data.results.slice(0, 5);
+      return response.data.results.slice(0, 10);
     })
     .catch(() => {
       return [];
     })
 }
 
-export const getCharacterByPagination = (url = "character"): Promise<CharacterServiceProps[]> => {
+export const getCharacterByPagination = (url = "character"): Promise<CharacterServiceProps> => {
   return API.get(url).then(response => response.data);
 }

@@ -7,6 +7,7 @@ import CharacterAvatar from "../../components/CharacterAvatar";
 import { EpisodeProps, getEpisodeById } from "../../services/Episodes";
 import { CharacterProps, getCharactersByMultipleIds } from "../../services/Character";
 import { FlatList, View } from "react-native";
+import ArrowBack from "../../components/ArrowBack";
 type Props = StackScreenProps<RootStackParamList, "Episode">;
 
 const Episode = ({ route, navigation }: Props) => {
@@ -43,7 +44,9 @@ const Episode = ({ route, navigation }: Props) => {
 
     return (
         <MainContainer>
-
+            <View style={{ position: 'absolute', left: 10, top: 60, flex: 1, width: 30, height: 30, borderRadius: 30, zIndex: 2, elevation: 20 }}>
+                <ArrowBack navigation={navigation} color={'black'} />
+            </View>
             <EpisodItem >
                 <EpisodeName >{episodeName}</EpisodeName>
                 <EpisodAirDate>{episodeAidDate}</EpisodAirDate>

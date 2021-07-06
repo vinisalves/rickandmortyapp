@@ -5,14 +5,14 @@ import { NavigationScreenProp } from 'react-navigation';
 
 
 
-const ArrowBack = (navigation: any) => {
-
+const ArrowBack = ({ navigation, color }: any) => {
+    console.log(navigation);
     return (
         <TouchableOpacity
             onPress={() => navigation.goBack()}
             style={{ elevation: 20 }}
         >
-            <AntDesign name="arrowleft" size={35} color="white" />
+            <AntDesign name="arrowleft" size={35} color={color} />
         </TouchableOpacity>
     )
 }

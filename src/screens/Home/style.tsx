@@ -34,14 +34,11 @@ export const InputContainer = styled.View`
   align-items: flex-end;
   padding: 10px;
   position: relative;
-  
 `;
 
 
 export const InputSearchCharacter = styled.TextInput`
    flex: 1;
-   
-   
 `
 export const SearchContainer = styled.View`
   flex:1;
@@ -53,8 +50,6 @@ export const SearchContainer = styled.View`
   border-bottom-right-radius: 20px;
   border-top-left-radius: 20px;
   overflow: hidden;
-    
-  
 `
 export const SearchItem = styled.TouchableOpacity`
   flex:1;
@@ -63,9 +58,7 @@ export const SearchItem = styled.TouchableOpacity`
   height: 80px;
   width: ${width - 100}px;
   background-color: red;
-  z-index: 24;
-  
-  
+  z-index: 24;  
 `
 export const SearchSeparator = styled.View`
   flex:1;
@@ -134,16 +127,23 @@ export const TitleName = styled.Text`
   
 `;
 
-type InfoContainerProps = {
-  translateY: string,
-}
-export const InfoContainer = styled.View<InfoContainerProps>`
+
+export const Footer = styled.View`
+  
+  bottom:0;
   width: ${width}px;
-  padding-top: 50px;
-  padding-left: 20px;
-  position: absolute;
-  bottom: -170px;
-  transform: translateY(${props => props.translateY + "px"});  
+  height: 120px;
+  border-top-right-radius: 50px;
+  background-color: #f8f8f8;
+  elevation:11;
+  overflow: hidden;
+`
+
+export const InfoContainer = styled.View`
+ 
+  width: ${width}px;
+  height: 120px;
+  padding: 10px 0 0 10px;
 `
 
 export const RowContainer = styled.View`
@@ -166,15 +166,4 @@ export const DescTextItem = styled.Text`
   padding-right: 5px;
 `;
 
-
-export const Footer = styled.View`
-  position: absolute;
-  bottom:0;
-  width: ${width}px;
-  height: 120px;
-  border-top-right-radius: 50px;
-  background-color: #f8f8f8;
-  elevation: 10;
-  z-index: 10;
-`
 

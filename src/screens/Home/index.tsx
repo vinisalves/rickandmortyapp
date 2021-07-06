@@ -4,10 +4,11 @@ import {
   Dimensions,
   View,
   StyleSheet,
+  FlatList,
 } from "react-native";
-import { StackScreenProps } from "@react-navigation/stack";
+import { DrawerScreenProps } from "@react-navigation/drawer";
 import { FontAwesome } from "@expo/vector-icons";
-import { MaterialIcons } from "@expo/vector-icons";
+
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import AppLoading from "expo-app-loading";
 import { SharedElement } from "react-navigation-shared-element";
@@ -27,29 +28,38 @@ import {
   Footer,
   InfoContainer,
 } from "./style";
-import { getCharacters, CharacterProps, searchCharactersByName } from "../../services/Character";
+import { getCharacters, CharacterProps } from "../../services/Character";
+import MenuButtom from "../../components/MenuButtom";
 
-type Props = StackScreenProps<RootStackParamList, "Home">;
+type Props = DrawerScreenProps<RootStackParamList, "Home">;
 
 const Home = ({ navigation }: Props) => {
-  const [data, setData] = useState<CharacterProps[]>([]);
+  const [characters, setCharacters] = useState<CharacterProps[]>([]);
   const scrollX = useRef(new Animated.Value(0)).current;
-
-  const { height, width } = Dimensions.get("screen");
+  const [refreshing, setRefreshing] = useState(false);
+  const charactersFlatlistRef = useRef<FlatList<any>>(null);
+  const { width } = Dimensions.get("screen");
 
   useEffect(() => {
-    const fetchData = async () => {
-      const characters = await getCharacters();
 
-      setData(characters);
-    };
-    if (data.length === 0) {
+    if (characters.length === 0) {
       fetchData();
-
+      console.log(navigation)
     }
   }, []);
 
-  if (data.length === 0) {
+  const fetchData = async () => {
+    const characters = await getCharacters();
+
+    setCharacters(characters);
+  };
+
+  const refreshData = async () => {
+    await fetchData();
+    charactersFlatlistRef.current?.scrollToIndex({ animated: true, index: 0 });
+  }
+
+  if (characters.length === 0) {
     return (
       <View>
         <AppLoading />
@@ -72,8 +82,8 @@ const Home = ({ navigation }: Props) => {
 
   const BackGround = ({ scrollX }: { scrollX: Animated.Value }) => {
     const background = scrollX.interpolate({
-      inputRange: data.map((_, index) => index * width + 1),
-      outputRange: data.map((_, index) => arrayBGs[Math.floor(Math.random() * 10)]),
+      inputRange: characters.map((_, index) => index * width + 1),
+      outputRange: characters.map((_, index) => arrayBGs[Math.floor(Math.random() * 10)]),
     });
 
     return (
@@ -97,7 +107,7 @@ const Home = ({ navigation }: Props) => {
         }}
       >
         {
-          data.map((_, i) => {
+          characters.map((_, i) => {
             const scale = scrollX.interpolate({
               inputRange: [(i - 1) * width, i * width, (i + 1) * width],
               outputRange: [0.8, 1.9, 0.8],
@@ -149,16 +159,10 @@ const Home = ({ navigation }: Props) => {
     index: number
   }
   const renderItem = ({ item, index }: RenderItemProps) => {
-    const translateY = scrollX.interpolate({
-      inputRange: [(index - 1) * width, index * width, (index + 1) * width],
-      outputRange: [height + 150, 0, 0],
-      extrapolate: "clamp",
-    });
 
-    const AInfoContainer = Animated.createAnimatedComponent(InfoContainer);
     return (
       <ItemContainer>
-        <CardContainer onPress={() => navigation.push('Detail',
+        <CardContainer onPress={() => navigation.navigate('Detail',
           {
             characterId: item.id,
             imageUrl: item.image
@@ -175,58 +179,80 @@ const Home = ({ navigation }: Props) => {
             />
           </SharedElement>
 
-
         </CardContainer>
         <TitleName numberOfLines={1}>
           {item.name}
         </TitleName>
-        <Animated.View
-          style={{
-            alignSelf: "flex-start",
-          }}
-        >
-          <AInfoContainer translateY={translateY}>
-            <RowContainer>
-              <TitleTextItem>Status:</TitleTextItem>
-              <DescTextItem>{item.status}</DescTextItem>
-              <Status status={item.status} />
-            </RowContainer>
-            <RowContainer>
-              <TitleTextItem>Specie:</TitleTextItem>
-              <DescTextItem>{item.species}</DescTextItem>
-            </RowContainer>
-            <RowContainer>
-              <TitleTextItem>Origin:</TitleTextItem>
-              <DescTextItem>{item.origin.name}</DescTextItem>
-            </RowContainer>
-            <RowContainer>
-              <TitleTextItem>Gender:</TitleTextItem>
-              <DescTextItem>{item.gender}</DescTextItem>
-              {item.gender === "Male" ? (
-                <MaterialCommunityIcons
-                  name="gender-male"
-                  size={25}
-                  color="gray"
-                />
-              ) : (
-                <MaterialCommunityIcons
-                  name="gender-female"
-                  size={25}
-                  color="gray"
-                />
-              )}
-            </RowContainer>
-          </AInfoContainer>
-        </Animated.View>
+
       </ItemContainer>
     );
   };
+
+  const ContainerInfo = ({ scrollX }: { scrollX: Animated.Value }) => {
+    const translateY = scrollX.interpolate({
+      inputRange: characters.map((_, index) => index * width + 1),
+      outputRange: characters.map((_, index) => index * -120),
+    });
+
+    return <Animated.View
+      style={{
+        transform: [
+          {
+            translateY
+          },
+
+        ]
+      }}
+    >
+      {
+        characters.map(character => {
+
+          return (
+            <InfoContainer key={character.id} >
+              <RowContainer>
+                <TitleTextItem>Status:</TitleTextItem>
+                <DescTextItem>{character.status}</DescTextItem>
+                <Status status={character.status} />
+              </RowContainer>
+              <RowContainer>
+                <TitleTextItem>Specie:</TitleTextItem>
+                <DescTextItem>{character.species}</DescTextItem>
+              </RowContainer>
+              <RowContainer>
+                <TitleTextItem>Origin:</TitleTextItem>
+                <DescTextItem>{character.origin.name}</DescTextItem>
+              </RowContainer>
+              <RowContainer>
+                <TitleTextItem>Gender:</TitleTextItem>
+                <DescTextItem>{character.gender}</DescTextItem>
+                {character.gender === "Male" ? (
+                  <MaterialCommunityIcons
+                    name="gender-male"
+                    size={25}
+                    color="gray"
+                  />
+                ) : (
+                  <MaterialCommunityIcons
+                    name="gender-female"
+                    size={25}
+                    color="gray"
+                  />
+                )}
+              </RowContainer>
+            </InfoContainer>
+          )
+        })
+      }
+    </Animated.View>
+  }
 
   return (
     <MainContainer>
       <BackGround scrollX={scrollX} />
       <Header>
-        <MaterialIcons name="menu" size={35} color="black" />
+        <MenuButtom navigation={navigation} color={'black'} />
+
+
         <TitleName numberOfLines={1}>Rick and Morty App</TitleName>
         <TouchableOpacity
           onPress={() => navigation.navigate("AllCharacters")}
@@ -234,8 +260,10 @@ const Home = ({ navigation }: Props) => {
           <FontAwesome name="search" size={24} color="black" />
         </TouchableOpacity>
       </Header>
+      <Indicator scrollX={scrollX} />
       <Animated.FlatList
-        data={data}
+        ref={charactersFlatlistRef}
+        data={characters}
         horizontal
         pagingEnabled
         showsHorizontalScrollIndicator={false}
@@ -243,16 +271,20 @@ const Home = ({ navigation }: Props) => {
         keyExtractor={(item) => item.id.toString()}
         renderItem={({ item, index }) => renderItem({ item, index })}
         style={{
-          zIndex: 11,
-          elevation: 11,
+          zIndex: 21,
+          elevation: 21,
         }}
         onScroll={Animated.event(
           [{ nativeEvent: { contentOffset: { x: scrollX } } }],
           { useNativeDriver: false }
         )}
+        refreshing={refreshing}
+        onRefresh={refreshData}
       ></Animated.FlatList>
-      <Indicator scrollX={scrollX} />
-      <Footer />
+
+      <Footer>
+        <ContainerInfo scrollX={scrollX} />
+      </Footer>
     </MainContainer>
   );
 }

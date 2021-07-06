@@ -3,6 +3,7 @@ import styled from "styled-components/native";
 export const MainContainer = styled.View`
     flex:1;
     align-items: center;    
+    margin-top: 40px;
 `
 export const EpisodItem = styled.View`
     margin-bottom: 20px;    

@@ -7,6 +7,7 @@ import Home from "../screens/Home";
 import CharacterDetail from "../screens/CharacterDetail";
 import Episode from "../screens/Episode";
 import AllCharacters from "../screens/AllCharacters";
+import AllEpisodes from "../screens/AllEpisodes";
 
 import { createSharedElementStackNavigator } from 'react-navigation-shared-element';
 import { Easing } from "react-native-reanimated";
@@ -87,6 +88,26 @@ export default function Routes() {
       <Stack.Screen
         name="AllCharacters"
         component={AllCharacters}
+        options={() => ({
+          headerShown: false,
+          transitionSpec: {
+            open: { animation: "timing", config: { duration: 300, easing: Easing.inOut(Easing.ease) } },
+            close: { animation: "timing", config: { duration: 300, easing: Easing.inOut(Easing.ease) } },
+          },
+          gestureEnabled: false,
+          cardStyleInterpolator: ({ current: { progress } }) => {
+            return {
+              cardStyle: {
+                opacity: progress
+              }
+            }
+          }
+        })
+        }
+      />
+      <Stack.Screen
+        name="AllEpisodes"
+        component={AllEpisodes}
         options={() => ({
           mode: "card",
           headerShown: false,
