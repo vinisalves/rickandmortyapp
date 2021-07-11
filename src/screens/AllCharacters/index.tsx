@@ -27,7 +27,7 @@ type Props = DrawerScreenProps<RootStackParamList, "AllCharacters">;
 
 const AllCharacters = ({ navigation }: Props) => {
     const [characters, setCharacters] = useState<CharacterProps[]>([]);
-    const [nextUrl, setNextUrl] = useState("");
+    const [nextUrl, setNextUrl] = useState<string | null>("");
     const [serchInputOpened, setSerchInputOpened] = useState(false);
     const [searchText, setSearchText] = useState('');
     const searchInputRef = useRef<TextInputProps>(null);
@@ -42,13 +42,21 @@ const AllCharacters = ({ navigation }: Props) => {
     }
 
     const fetchMore = () => {
+        console.log('Vai dar fetch');
+        if (!nextUrl) return;
         if (searchText.trim().length !== 0) return;
         getCharacterByPagination(nextUrl).then(response => {
             const { info, results } = response;
 
-            if (info.next) setNextUrl(info.next);
+            if (info.next) {
+                setNextUrl(info.next);
+            } else {
+                setNextUrl(null);
+            }
 
             if (results.length > 0) {
+                const alreadyInside = characters.some(characters => results.includes(characters));
+                console.log(alreadyInside);
                 setCharacters((characters) => [...characters, ...results]);
             }
         })
@@ -123,6 +131,8 @@ const AllCharacters = ({ navigation }: Props) => {
                 keyExtractor={(item) => item.id.toString()}
                 ItemSeparatorComponent={ItemSeparator}
                 showsVerticalScrollIndicator={false}
+
+                onEndReachedThreshold={.5}
                 onEndReached={fetchMore}
                 style={{ paddingTop: 50 }}
                 renderItem={({ item, index }) => {
