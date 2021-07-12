@@ -11,3 +11,5 @@ This app list all characters and all episodes.
 git clone https://github.com/vinisalves/rickandmortyapp.git
 ```
 
+# Demo
+https://github.com/vinisalves/rickandmortyapp/blob/e8ec092092b6fe5a0d0fa58974091655cf526f7d/rickandmoryapp.gif
