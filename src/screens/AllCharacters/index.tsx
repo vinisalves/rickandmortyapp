@@ -42,7 +42,7 @@ const AllCharacters = ({ navigation }: Props) => {
     }
 
     const fetchMore = () => {
-        console.log('Vai dar fetch');
+
         if (!nextUrl) return;
         if (searchText.trim().length !== 0) return;
         getCharacterByPagination(nextUrl).then(response => {
@@ -55,8 +55,7 @@ const AllCharacters = ({ navigation }: Props) => {
             }
 
             if (results.length > 0) {
-                const alreadyInside = characters.some(characters => results.includes(characters));
-                console.log(alreadyInside);
+
                 setCharacters((characters) => [...characters, ...results]);
             }
         })

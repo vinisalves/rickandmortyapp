@@ -25,9 +25,6 @@ const AllEpisodes = ({ navigation }: Props) => {
             }
 
             if (results.length > 0) {
-                const alreadyInside = episodes.some(episode => results.includes(episode));
-
-                console.log(alreadyInside);
                 setEpisodes((episodes) => [...episodes, ...results]);
             }
         })

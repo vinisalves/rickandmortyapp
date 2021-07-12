@@ -11,7 +11,7 @@ export default function App() {
   let [fontsLoaded] = useFonts({
     "rick-and-morty-font": require("./assets/fonts/get_schwifty.ttf"),
   });
-  console.log(fontsLoaded);
+
   if (!fontsLoaded) {
     return <AppLoading />;
   }
