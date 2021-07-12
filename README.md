@@ -10,6 +10,11 @@ This app list all characters and all episodes.
 ``` bash
 git clone https://github.com/vinisalves/rickandmortyapp.git
 ```
+# Running
+``` bash
+npm run start
+```
+
 
 # Demo
 
