@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "recognition-app",
-    "slug": "recognition-app",
+    "name": "rickandmorty-app",
+    "slug": "rickandmorty-app",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
